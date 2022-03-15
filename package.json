@@ -1,0 +1,25 @@
+{
+  "name": "sql-employee-tracker-week-12",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NilesHachmeister/SQL-Employee-Tracker-Week-12.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NilesHachmeister/SQL-Employee-Tracker-Week-12/issues"
+  },
+  "dependencies": {
+    "mysql2": "^2.2.5",
+    "inquirer": "^8.2.0",
+    "console.table":"0.10.0"
+  },
+  "homepage": "https://github.com/NilesHachmeister/SQL-Employee-Tracker-Week-12#readme"
+}
