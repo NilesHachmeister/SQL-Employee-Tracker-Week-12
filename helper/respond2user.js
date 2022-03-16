@@ -41,7 +41,7 @@ Respond2User.prototype.viewRoles = function () {
 
 
 Respond2User.prototype.viewEmployees = function () {
-    db.query('SELECT * FROM employees', function (err, results) {
+    db.query('SELECT e.id, e.employee_first_name, e.employee_last_name, e.employee_role_id, e.manager_id, r.role_title, r.role_salary, d.department_name FROM employees e JOIN roles r ON e.employee_role_id = r.id JOIN departments d ON r.department_id = d.id', function (err, results) {
         console.table(results);
     });
 }
