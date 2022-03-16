@@ -1,7 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-const cTable = require('console.table');
-const mysql = require('mysql2');
+
+
 const express = require('express');
 const responseToUser = require('./helper/respond2user')
 
@@ -24,21 +24,6 @@ app.use(express.json());
 // eddit points on the table depending on what is going on
 
 
-
-// const db = mysql.createConnection(
-//   {
-//     host: 'localhost',
-//     // MySQL username,
-//     user: 'root',
-//     // MySQL password created with a random password genorator
-//     password: 'S$U%Ry2AT%9To8A29hro6h4cWr',
-
-
-//     //   may change database name
-//     database: 'hr_db'
-//   },
-//   console.log(`Connected to the courses_db database.`)
-// );
 
 
 
@@ -92,19 +77,12 @@ initPromptUser()
 // });
 
 
-// db.query('SELECT * FROM departments', function (err, results) {
-
-//   console.table(results)
-// });
 
 
-// db.query('SELECT * FROM roles', function (err, results) {
-//   console.table(results);
-// });
 
-// db.query('SELECT * FROM employees', function (err, results) {
-//   console.table(results);
-// });
+
+
+
 
 
 
