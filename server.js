@@ -62,21 +62,22 @@ function initPromptUser() {
       if (data.decideFunction === "View all departments") {
         newResponse.viewDepartments();
       } else if (data.decideFunction === "View all roles") {
-        console.log(2);
+        newResponse.viewRoles();
       } else if (data.decideFunction === "View all employees") {
-        console.log(3);
+        newResponse.viewEmployees();
       } else if (data.decideFunction === "Add a department") {
-        console.log(4);
+        newResponse.addDepartment();
       } else if (data.decideFunction === "Add a role") {
-        console.log(5);
+        newResponse.addRole();
       } else if (data.decideFunction === "Add an employee") {
-        console.log(6);
+        newResponse.addEmployee();
       } else {
-        console.log(data.decideFunction);
+        newResponse.updateEmployeeRole();
       }
 
     });
 }
+
 
 
 initPromptUser()
