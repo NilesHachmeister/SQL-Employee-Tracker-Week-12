@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +17,13 @@
     "url": "https://github.com/NilesHachmeister/SQL-Employee-Tracker-Week-12/issues"
   },
   "dependencies": {
-    "mysql2": "^2.2.5",
+    "console.table": "0.10.0",
+    "express": "^4.17.3",
     "inquirer": "^8.2.0",
-    "console.table":"0.10.0"
+    "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   },
   "homepage": "https://github.com/NilesHachmeister/SQL-Employee-Tracker-Week-12#readme"
 }
