@@ -1,17 +1,17 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
-
 const cTable = require('console.table');
-
-
 const mysql = require('mysql2');
-
 const express = require('express');
+const responseToUser = require('./helper/respond2user')
+
 
 const PORT = process.env.PORT || 3001;
 const app = express();
 
 const seedQuery = fs.readFileSync("./db/seeds.sql", { encoding: "utf-8", })
+
+
 
 
 app.use(express.urlencoded({ extended: false }));
@@ -56,8 +56,11 @@ function initPromptUser() {
       },
     ])
     .then((data) => {
+
+      const newResponse = new responseToUser;
+
       if (data.decideFunction === "View all departments") {
-        console.log("Viewing departments");
+        newResponse.viewDepartments();
       } else if (data.decideFunction === "View all roles") {
         console.log(2);
       } else if (data.decideFunction === "View all employees") {
