@@ -3,7 +3,7 @@ const fs = require('fs');
 
 
 const express = require('express');
-const responseToUser = require('./helper/respond2user')
+const viewDb = require('./helper/viewdb')
 
 
 const PORT = process.env.PORT || 3001;
@@ -42,7 +42,7 @@ function initPromptUser() {
     ])
     .then((data) => {
 
-      const newResponse = new responseToUser;
+      const newResponse = new viewDb;
 
       if (data.decideFunction === "View all departments") {
         newResponse.viewDepartments();
