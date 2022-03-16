@@ -14,6 +14,7 @@ VALUES ("power", 4.2, 1),
 
        INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id)
 VALUES ("Gabriel", "Landeskog", 1, null),
+       ("Valeri", "Nichushkin", 1, null),
        ("Nathan", "MacKinnon", 2, 1),
        ("Cale", "Makar", 3, 1),
        ("Eric", "Johnson", 4, 1),
