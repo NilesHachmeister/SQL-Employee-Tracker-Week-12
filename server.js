@@ -51,9 +51,9 @@ db.query('SELECT * FROM roles', function (err, results) {
   console.log(results);
 });
 
-//   db.query('SELECT * FROM employees', function (err, results) {
-//     console.log(results);
-//   });
+db.query('SELECT * FROM employees', function (err, results) {
+  console.log(results);
+});
 
 
 

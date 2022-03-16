@@ -12,8 +12,9 @@ VALUES ("power", 4.2, 1),
        ("shut down", 6.0, 3);
 
 
---        INSERT INTO courses (id, course_title, course_description, active)
--- VALUES (001, "Algebra I", "Linear equations, inequalities, functions, and graphs", true),
---        (002, "Pre-Calculus", "Polynomials, Complex Numbers, Vectors", true),
---        (003, "Calculus I", "Limits, Differentiation, Derivatives", true),
---        (004, "Euclidean Geometry", "Intuitively Appealing Axioms Galore", false);
+       INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id)
+VALUES ("Gabriel", "Landeskog", 1, null),
+       ("Nathan", "MacKinnon", 2, 1),
+       ("Cale", "Makar", 3, 1),
+       ("Eric", "Johnson", 4, 1),
+       ("Darcy", "Kuemper", 5, 1);

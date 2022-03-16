@@ -22,15 +22,16 @@ CREATE TABLE roles (
 
 CREATE TABLE employees (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  first_name VARCHAR(30) NOT NULL,
-  last_name VARCHAR(30) NOT NULL,
-  role_id INT NOT NULL,
-  manager_id INT NOT NULL,
-  FOREIGN KEY (role_id)
+  employee_first_name VARCHAR(30) NOT NULL,
+  employee_last_name VARCHAR(30) NOT NULL,
+  employee_role_id INT,
+  manager_id INT,
+  FOREIGN KEY (employee_role_id)
   REFERENCES roles(id)
   ON DELETE SET NULL
 );
 
+-- add not null to employee role id
 
 
 
