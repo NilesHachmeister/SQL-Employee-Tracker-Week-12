@@ -4,7 +4,7 @@ const fs = require('fs');
 
 const express = require('express');
 const viewDb = require('./helper/viewdb')
-
+const editDb = require('./helper/editdb')
 
 const PORT = process.env.PORT || 3001;
 const app = express();
@@ -43,6 +43,7 @@ function initPromptUser() {
     .then((data) => {
 
       const newResponse = new viewDb;
+      const newEdit = new editDb
 
       if (data.decideFunction === "View all departments") {
         newResponse.viewDepartments();
@@ -51,13 +52,13 @@ function initPromptUser() {
       } else if (data.decideFunction === "View all employees") {
         newResponse.viewEmployees();
       } else if (data.decideFunction === "Add a department") {
-        newResponse.addDepartment();
+        newEdit.addDepartment();
       } else if (data.decideFunction === "Add a role") {
-        newResponse.addRole();
+        newEdit.addRole();
       } else if (data.decideFunction === "Add an employee") {
-        newResponse.addEmployee();
+        newEdit.addEmployee();
       } else {
-        newResponse.updateEmployeeRole();
+        newEdit.updateEmployeeRole();
       }
 
     });

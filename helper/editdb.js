@@ -2,9 +2,10 @@ const fs = require('fs')
 
 const mysql = require('mysql2');
 const cTable = require('console.table');
-
+const inquirer = require('inquirer');
 
 function EditDb() { }
+let departmentArr = []
 
 
 const db = mysql.createConnection(
@@ -22,23 +23,33 @@ const db = mysql.createConnection(
     console.log(`Connected to the courses_db database.`)
 );
 
+
+
+
+db.query('SELECT department_name FROM departments', function (err, results) {
+    for (let index = 0; index < results.length; index++) {
+        const element = results[index];
+        let pushedEl = results[index].department_name;
+        departmentArr.push(pushedEl)
+    }
+});
+
 EditDb.prototype.addDepartment = function () {
     inquirer
         .prompt([
             {
-                type: 'list',
-                message: "What would you like to do?",
-                name: 'decideFunction',
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
+                type: 'input',
+                message: "What is the name of the department?",
+                name: 'department',
             },
         ])
         .then((data) => {
+            const newDepartment = data.department;
 
-            const newResponse = new responseToUser;
-
-            if (data.decideFunction === "View all departments") {
-                newResponse.viewDepartments();
-            }
+            db.query(`INSERT INTO departments (department_name)
+            VALUES (?)`, newDepartment, (err, result) => {
+                console.log(`Added ${newDepartment} to the database`);
+            })
         });
 }
 
@@ -47,19 +58,48 @@ EditDb.prototype.addRole = function () {
     inquirer
         .prompt([
             {
+                type: 'input',
+                message: "What is the name of the role?",
+                name: 'role',
+            },
+            {
+                type: 'input',
+                message: "What is the salary of the role?",
+                name: 'salary',
+            },
+            {
                 type: 'list',
-                message: "What would you like to do?",
-                name: 'decideFunction',
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
+                message: "Which department does the role belong to?",
+                name: 'department',
+                choices: departmentArr,
             },
         ])
         .then((data) => {
 
-            const newResponse = new responseToUser;
+            const newRole = data.role
+            const newSalary = data.salary
+            const selectedDepartment = data.department
+            let selectedDepartmentId;
 
-            if (data.decideFunction === "View all departments") {
-                newResponse.viewDepartments();
-            }
+            db.query('SELECT id FROM departments WHERE department_name = ?', selectedDepartment, function (err, results) {
+                selectedDepartmentId = results[0].id
+            }).then(
+
+
+// figure this out
+
+                db.query(`INSERT INTO roles (role_title, role_salary, department_id)
+                VALUES (?, ?, ?)`, newDepartment, (err, result) => {
+                    console.log(`Added ${newDepartment} to the database`);
+                })
+
+
+            )
+
+
+
+
+            console.log(`Added ${newRole} to the database`);
         });
 }
 
