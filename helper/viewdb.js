@@ -34,21 +34,31 @@ ViewDb.prototype.viewDepartments = function () {
 
 
 ViewDb.prototype.viewRoles = function () {
-  db.query('SELECT * FROM roles JOIN departments ON roles.department_id = departments.id ', function (err, results) {
+  db.query('SELECT roles.id, roles.role_title `Title`, roles.role_salary `Salary`, departments.department_name `Department` FROM roles JOIN departments ON roles.department_id = departments.id ', function (err, results) {
     console.table(results);
   });
 }
 
 // fix it to spit out just what is needed
 ViewDb.prototype.viewEmployees = function () {
-  db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, e.employee_role_id, e.manager_id, r.role_title, r.role_salary, d.department_name FROM employees e JOIN roles r ON e.employee_role_id = r.id JOIN departments d ON r.department_id = d.id', function (err, results) {
+  db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, m.employee_first_name `manager` FROM employees e JOIN employees m ON e.manager_id = m.id JOIN roles r ON e.employee_role_id = r.id JOIN departments d ON r.department_id = d.id', function (err, results) {
     console.table(results);
   });
 }
 
 
+ViewDb.prototype.viewByDepartment = function () {
+  db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, m.employee_first_name `manager` FROM employees e JOIN employees m ON e.manager_id = m.id JOIN roles r ON e.employee_role_id = r.id JOIN departments d ON r.department_id = d.id ORDER BY d.department_name DESC', function (err, results) {
+    console.table(results);
+  });
+}
 
 
+ViewDb.prototype.viewByManager = function () {
+  db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, m.employee_first_name `manager` FROM employees e JOIN employees m ON e.manager_id = m.id JOIN roles r ON e.employee_role_id = r.id JOIN departments d ON r.department_id = d.id ORDER BY m.employee_first_name DESC', function (err, results) {
+    console.table(results);
+  });
+}
 
 
 

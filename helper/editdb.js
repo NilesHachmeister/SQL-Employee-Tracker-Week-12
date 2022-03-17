@@ -3,9 +3,14 @@ const fs = require('fs')
 const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
+const { resolveObjectURL } = require('buffer');
+
 
 function EditDb() { }
 let departmentArr = []
+let roleArr = []
+let employeeArr = []
+let managerArr = []
 
 
 const db = mysql.createConnection(
@@ -28,11 +33,30 @@ const db = mysql.createConnection(
 
 db.query('SELECT department_name FROM departments', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const element = results[index];
-        let pushedEl = results[index].department_name;
-        departmentArr.push(pushedEl)
+        const departmentName = results[index].department_name;
+        departmentArr.push(departmentName)
     }
 });
+
+db.query('SELECT role_title FROM roles', function (err, results) {
+    for (let index = 0; index < results.length; index++) {
+        const roleName = results[index].role_title;
+        roleArr.push(roleName)
+    }
+});
+
+db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name FROM employees', function (err, results) {
+    for (let index = 0; index < results.length; index++) {
+        const employeeName = results[index].employee_name;
+        employeeArr.push(employeeName)
+        managerArr.push(employeeName)
+    }
+    managerArr.push("None")
+});
+
+
+
+
 
 EditDb.prototype.addDepartment = function () {
     inquirer
@@ -81,38 +105,50 @@ EditDb.prototype.addRole = function () {
             const selectedDepartment = data.department
             let selectedDepartmentId;
 
-            db.query('SELECT id FROM departments WHERE department_name = ?', selectedDepartment, function (err, results) {
+            db.promise().query('SELECT id FROM departments WHERE department_name = ?', selectedDepartment, function (err, results) {
                 selectedDepartmentId = results[0].id
-            }).then(
+            }).then((selectedDepartmentId) => {
 
+                const departmentId = selectedDepartmentId[0][0].id
 
-// figure this out
-
-                db.query(`INSERT INTO roles (role_title, role_salary, department_id)
-                VALUES (?, ?, ?)`, newDepartment, (err, result) => {
-                    console.log(`Added ${newDepartment} to the database`);
+                let updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${departmentId});`
+                db.query(updateString, (err, result) => {
+            
                 })
-
-
-            )
-
-
-
-
+            });
             console.log(`Added ${newRole} to the database`);
         });
 }
+
+
 
 
 EditDb.prototype.addEmployee = function () {
     inquirer
         .prompt([
             {
-                type: 'list',
-                message: "What would you like to do?",
-                name: 'decideFunction',
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
+                type: 'input',
+                message: "What is employee's first name?",
+                name: 'first',
             },
+            {
+                type: 'input',
+                message: "What is the employee's last name?",
+                name: 'last',
+            },
+            {
+                type: 'list',
+                message: "What is the employee's role?",
+                name: 'role',
+                choices: roleArr,
+            },
+            {
+                type: 'list',
+                message: "What is the employee's role?",
+                name: 'role',
+                choices: managerArr,
+            },
+
         ])
         .then((data) => {
 
@@ -130,20 +166,82 @@ EditDb.prototype.updateEmployeeRole = function () {
         .prompt([
             {
                 type: 'list',
-                message: "What would you like to do?",
-                name: 'decideFunction',
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role"]
+                message: "Which employee would you like to update?",
+                name: 'employee',
+                choices: employeeArr
+            },
+            {
+                type: 'list',
+                message: "What role would you like them to have?",
+                name: 'role',
+                choices: roleArr
             },
         ])
         .then((data) => {
 
-            const newResponse = new responseToUser;
+            const employee = data.employee;
+            const role = data.role;
+            let roleIdNumber = 0;
 
-            if (data.decideFunction === "View all departments") {
-                newResponse.viewDepartments();
-            }
+            db.promise().query('SELECT id FROM roles WHERE roles.role_title = ?', role, function (err, results) {
+
+                roleIdNumber = results[0].id;
+
+            }).then((roleIdNumber) => {
+
+                let roleId = roleIdNumber[0][0].id
+
+                const updateStirng = `UPDATE employees SET employee_role_id = ${roleId} WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = "${employee}";`
+
+                db.query(updateStirng, (err, result) => {
+                    console.log(`${employee} now has the role of ${role}`);
+                })
+            });
         });
 }
+
+EditDb.prototype.updateEmployeeManager = function () {
+    inquirer
+        .prompt([
+            {
+                type: 'list',
+                message: "Which employee would you like to update?",
+                name: 'employee',
+                choices: employeeArr
+            },
+            {
+                type: 'list',
+                message: "Who would you like to make their manager?",
+                name: 'manager',
+                choices: managerArr
+            },
+        ])
+        .then((data) => {
+
+            const employee = data.employee;
+            const manager = data.manager;
+
+
+
+            // figure out none situation...
+            db.promise().query('SELECT id FROM roles WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = ?', manager, function (err, results) {
+
+                roleIdNumber = results[0].id;
+
+            }).then((roleIdNumber) => {
+
+                let roleId = roleIdNumber[0][0].id
+
+                const updateStirng = `UPDATE employees SET employee_role_id = ${roleId} WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = "${employee}";`
+
+                db.query(updateStirng, (err, result) => {
+                    console.log(`${employee} now has the role of ${role}`);
+                })
+            });
+        });
+}
+
+
 
 
 
