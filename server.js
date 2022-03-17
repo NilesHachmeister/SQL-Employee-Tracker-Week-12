@@ -40,8 +40,12 @@ function initPromptUser() {
       const newRemove = new removeDb;
 
       if (data.decideFunction === "View all departments") {
-        newResponse.viewDepartments();    // done
-        initPromptUser();
+
+        Promise.resolve(newResponse.viewDepartments()).then(
+          initPromptUser()
+        );
+        // done
+
       } else if (data.decideFunction === "View all roles") {
         newResponse.viewRoles(); //done
 
@@ -49,10 +53,12 @@ function initPromptUser() {
         newResponse.viewEmployees(); // figure out why landy isnt showing up
 
       } else if (data.decideFunction === "Add a department") {
-        newEdit.addDepartment() // done
+        newEdit.addDepartment();
+        // done
 
       } else if (data.decideFunction === "Add a role") {
         newEdit.addRole(); //done
+        initPromptUser();
 
       } else if (data.decideFunction === "Add an employee") {
         newEdit.addEmployee();
@@ -75,7 +81,7 @@ function initPromptUser() {
         newRemove.removeDepartment();   //fix where it deletes the
 
       } else if (data.decideFunction === "View total utilized budget by department") {
-
+        newResponse.viewBudget();
       } else {
         console.log("Goodbye");
         return;

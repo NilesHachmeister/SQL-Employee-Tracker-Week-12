@@ -38,20 +38,23 @@ db.query('SELECT department_name FROM departments', function (err, results) {
     }
 });
 
-db.query('SELECT role_title FROM roles', function (err, results) {
+db.query('SELECT * FROM roles', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const roleName = results[index].role_title;
+        const roleName = { name: results[index].role_title, value: results[index].id };
         roleArr.push(roleName)
     }
+    console.log("roleArr", roleArr)
 });
 
-db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name FROM employees', function (err, results) {
+
+db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name , id FROM employees', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const employeeName = results[index].employee_name;
+        const employeeName = { name: results[index].employee_name, value: results[index].id };
         employeeArr.push(employeeName)
         managerArr.push(employeeName)
     }
-    managerArr.push("None")
+    managerArr.push({ name: "None", value: null });
+    console.log(managerArr)
 });
 
 
@@ -113,7 +116,7 @@ EditDb.prototype.addRole = function () {
 
                 let updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${departmentId});`
                 db.query(updateString, (err, result) => {
-            
+
                 })
             });
             console.log(`Added ${newRole} to the database`);
@@ -144,21 +147,35 @@ EditDb.prototype.addEmployee = function () {
             },
             {
                 type: 'list',
-                message: "What is the employee's role?",
-                name: 'role',
+                message: "Who is the employee's manager",
+                name: 'manager',
                 choices: managerArr,
             },
 
         ])
         .then((data) => {
 
-            const newResponse = new responseToUser;
+            console.log("insert ", data);
+            const firstName = data.first;
+            const lastName = data.last;
+            const selectedRole = data.role;
+            const selectedManager = data.manager;
 
-            if (data.decideFunction === "View all departments") {
-                newResponse.viewDepartments();
-            }
+            let roleid;
+
+            const addEmployee = `INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${selectedRole}, ${selectedManager})`
+
+            db.query(addEmployee, (err, result) => {
+                console.log("Added employeee to db.")
+            })
+
+
+
         });
-}
+
+
+};
+
 
 
 EditDb.prototype.updateEmployeeRole = function () {
