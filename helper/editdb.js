@@ -6,13 +6,13 @@ const inquirer = require('inquirer');
 // creating the constructor function se that the prototypes can be used in server.js
 function EditDb() { }
 
-
+// creates the arrays that will be populated with the information recieved from the database
 let departmentArr = []
 let roleArr = []
 let employeeArr = []
 let managerArr = []
 
-
+// connects to database
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -22,9 +22,7 @@ const db = mysql.createConnection(
     },
 );
 
-
-
-
+// populates the departmentArr with all of the departments in the database
 db.query('SELECT * FROM departments', function (err, results) {
     for (let index = 0; index < results.length; index++) {
         const departmentName = { name: results[index].department_name, value: results[index].id };
@@ -32,6 +30,7 @@ db.query('SELECT * FROM departments', function (err, results) {
     }
 });
 
+// populates the rolesArr with all of the roles the database
 db.query('SELECT * FROM roles', function (err, results) {
     for (let index = 0; index < results.length; index++) {
         const roleName = { name: results[index].role_title, value: results[index].id };
@@ -39,7 +38,7 @@ db.query('SELECT * FROM roles', function (err, results) {
     }
 });
 
-
+// populates the employeeArr and managerArr with all of the roles the database
 db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name , id FROM employees', function (err, results) {
     for (let index = 0; index < results.length; index++) {
         const employeeName = { name: results[index].employee_name, value: results[index].id };
@@ -50,9 +49,7 @@ db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_l
 });
 
 
-
-
-
+// this prototype is used to add a department
 EditDb.prototype.addDepartment = function () {
     inquirer
         .prompt([
@@ -72,7 +69,7 @@ EditDb.prototype.addDepartment = function () {
         });
 }
 
-
+// this prototype is used to add a role
 EditDb.prototype.addRole = function () {
     inquirer
         .prompt([
@@ -99,24 +96,15 @@ EditDb.prototype.addRole = function () {
             const newSalary = data.salary
             const selectedDepartment = data.department
 
-
-
-
             const updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${selectedDepartment});`
 
             db.query(updateString, (err, result) => {
-
-                initPromptUser()
-
+                console.log(`Added ${newRole} to the database`);
             })
-
-            console.log(`Added ${newRole} to the database`);
         });
 }
 
-
-
-
+//this prototype is used to add an employee 
 EditDb.prototype.addEmployee = function () {
     inquirer
         .prompt([
@@ -151,7 +139,6 @@ EditDb.prototype.addEmployee = function () {
             const selectedRole = data.role;
             const selectedManager = data.manager;
 
-
             const addEmployee = `INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${selectedRole}, ${selectedManager})`
 
             db.query(addEmployee, (err, result) => {
@@ -160,8 +147,7 @@ EditDb.prototype.addEmployee = function () {
         });
 };
 
-
-
+// this prototype is used to update an employees role
 EditDb.prototype.updateEmployeeRole = function () {
     inquirer
         .prompt([
@@ -191,6 +177,7 @@ EditDb.prototype.updateEmployeeRole = function () {
         });
 }
 
+// this prototype is used to update an employees manager
 EditDb.prototype.updateEmployeeManager = function () {
     inquirer
         .prompt([
@@ -216,12 +203,9 @@ EditDb.prototype.updateEmployeeManager = function () {
             db.query(updateStirng, (err, result) => {
                 console.log(`Manager has been updated`);
             })
-
         });
 }
 
 
-
-
-
+// exports the prototypes
 module.exports = EditDb;
