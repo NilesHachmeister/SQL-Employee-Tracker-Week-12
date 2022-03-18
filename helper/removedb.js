@@ -14,16 +14,10 @@ let employeeArr = []
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        // MySQL username,
         user: 'root',
-        // MySQL password created with a random password genorator
         password: 'S$U%Ry2AT%9To8A29hro6h4cWr',
-
-
-        //   may change database name
         database: 'hr_db'
     },
-    console.log(`Connected to the courses_db database.`)
 );
 
 

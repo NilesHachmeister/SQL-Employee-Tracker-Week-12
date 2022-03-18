@@ -5,10 +5,10 @@ const fs = require('fs');
 const express = require('express');
 const viewDb = require('./helper/viewdb')
 const editDb = require('./helper/editdb')
-const removeDb = require('./helper/removedb')
+const removeDb = require('./helper/removedb');
+const exp = require('constants');
 const PORT = process.env.PORT || 3001;
 const app = express();
-
 
 
 
@@ -17,13 +17,21 @@ app.use(express.json());
 
 
 
-// figure out atuo seed
-// inquirer asks questions
-// eddit points on the table depending on what is going on
+// fix cascade delete issue
+//promise issue
 
 
 
-function initPromptUser() {
+//comment
+//video
+//readme
+
+// express, inquirer, mysql2, console.table
+
+
+
+
+var initPromptUser = function () {
   inquirer
     .prompt([
       {
@@ -41,9 +49,9 @@ function initPromptUser() {
 
       if (data.decideFunction === "View all departments") {
 
-        Promise.resolve(newResponse.viewDepartments()).then(
-          initPromptUser()
-        );
+        newResponse.viewDepartments()
+
+
         // done
 
       } else if (data.decideFunction === "View all roles") {
@@ -69,11 +77,11 @@ function initPromptUser() {
         newResponse.viewByManager(); // done
 
       } else if (data.decideFunction === "Remove employee") {
-        newRemove.removeEmployee();    
+        newRemove.removeEmployee();    //done
       } else if (data.decideFunction === "Update employee role") {
         newEdit.updateEmployeeRole(); // done
       } else if (data.decideFunction === "Update employee manager") {
-        newEdit.updateEmployeeManager();
+        newEdit.updateEmployeeManager(); // done
       } else if (data.decideFunction === "Remove role") {
         newRemove.removeRole(); // fix where it deletes the player as well
 
@@ -96,33 +104,10 @@ function initPromptUser() {
 
 
 
+
 initPromptUser()
 
 
-// db.query(seedQuery, function (err, results) {
-//   console.log(err)
-// });
-
-// db.query('SOURCE ./db/seeds.sql', function (err, results) {
-//   console.log(err)
-// });
-
-
-
-
-
-
-
-
-
-
-
-//   db.query(`DELETE FROM course_names WHERE id = ?`, 3, (err, result) => {
-//     if (err) {
-//       console.log(err);
-//     }
-//     console.log(result);
-//   });
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

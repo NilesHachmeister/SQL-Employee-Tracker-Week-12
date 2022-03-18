@@ -1,9 +1,11 @@
+
+-- seeds the departments table
 INSERT INTO departments (department_name)
 VALUES ("forward"),
        ("defence"),
        ("goaltending");
 
-
+-- seeds the roles table
        INSERT INTO roles (role_title, role_salary, department_id)
 VALUES ("power", 4.2, 1),
        ("skilled", 6.5, 1),
@@ -11,7 +13,7 @@ VALUES ("power", 4.2, 1),
        ("stay at home", 4, 2),
        ("shut down", 6.0, 3);
 
-
+-- seeds the employees table
        INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id)
 VALUES ("Gabriel", "Landeskog", 1, null),
        ("Valeri", "Nichushkin", 1, 1),

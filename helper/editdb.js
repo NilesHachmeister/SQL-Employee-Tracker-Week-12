@@ -1,12 +1,12 @@
-const fs = require('fs')
 
+// requiring mysql2 and inquirer
 const mysql = require('mysql2');
-const cTable = require('console.table');
 const inquirer = require('inquirer');
-const { resolveObjectURL } = require('buffer');
 
-
+// creating the constructor function se that the prototypes can be used in server.js
 function EditDb() { }
+
+
 let departmentArr = []
 let roleArr = []
 let employeeArr = []
@@ -101,11 +101,13 @@ EditDb.prototype.addRole = function () {
 
 
 
+
             const updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${selectedDepartment});`
 
             db.query(updateString, (err, result) => {
 
-                return
+                initPromptUser()
+
             })
 
             console.log(`Added ${newRole} to the database`);
@@ -181,7 +183,7 @@ EditDb.prototype.updateEmployeeRole = function () {
             const employee = data.employee;
             const role = data.role;
 
-            const updateStirng = `UPDATE employees SET employee_role_id = ${role} WHERE id = "${employee}";`
+            const updateStirng = `UPDATE employees SET employee_role_id = ${role} WHERE id = ${employee};`
 
             db.query(updateStirng, (err, result) => {
                 console.log(`Role has been updated`);
@@ -209,24 +211,12 @@ EditDb.prototype.updateEmployeeManager = function () {
 
             const employee = data.employee;
             const manager = data.manager;
+            const updateStirng = `UPDATE employees SET manager_id = ${manager} WHERE id = ${employee};`
 
+            db.query(updateStirng, (err, result) => {
+                console.log(`Manager has been updated`);
+            })
 
-
-            // figure out none situation...
-            db.promise().query('SELECT id FROM roles WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = ?', manager, function (err, results) {
-
-                roleIdNumber = results[0].id;
-
-            }).then((roleIdNumber) => {
-
-                let roleId = roleIdNumber[0][0].id
-
-                const updateStirng = `UPDATE employees SET employee_role_id = ${roleId} WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = "${employee}";`
-
-                db.query(updateStirng, (err, result) => {
-                    console.log(`${employee} now has the role of ${role}`);
-                })
-            });
         });
 }
 

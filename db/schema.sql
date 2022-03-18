@@ -1,15 +1,17 @@
+-- creates the database
 DROP DATABASE IF EXISTS hr_db;
 CREATE DATABASE hr_db;
 
+-- uses the database
 USE hr_db;
 
--- change hr to something better?
-
+-- creates the department table
 CREATE TABLE departments (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   department_name VARCHAR(30) NOT NULL
 );
 
+-- creates the roles table
 CREATE TABLE roles (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   role_title VARCHAR(30),
@@ -20,6 +22,7 @@ CREATE TABLE roles (
   ON DELETE SET NULL
 );
 
+-- creates the employees table
 CREATE TABLE employees (
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   employee_first_name VARCHAR(30) NOT NULL,
@@ -30,9 +33,3 @@ CREATE TABLE employees (
   REFERENCES roles(id)
   ON DELETE SET NULL
 );
-
--- add not null to employee role id
-
-
-
-    -- * `manager_id`: `INT` to hold reference to another employee that is the manager of the current employee (`null` if the employee has no manager)
