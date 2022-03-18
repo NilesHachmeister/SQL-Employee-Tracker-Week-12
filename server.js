@@ -42,46 +42,86 @@ function initPromptUser() {
       if (data.decideFunction === "View all departments") {
 
         Promise.resolve(newResponse.viewDepartments()).then(
-          initPromptUser()
-        );
+          initPromptUser());
         // done
 
       } else if (data.decideFunction === "View all roles") {
-        newResponse.viewRoles(); //done
+        //done
+
+        Promise.resolve(newResponse.viewRoles()).then(
+          initPromptUser());
 
       } else if (data.decideFunction === "View all employees") {
-        newResponse.viewEmployees(); // figure out why landy isnt showing up
 
+
+        Promise.resolve(newResponse.viewEmployees()).then(
+          initPromptUser());
       } else if (data.decideFunction === "Add a department") {
-        newEdit.addDepartment();
+
         // done
 
+        Promise.resolve(newEdit.addDepartment()).then(
+          initPromptUser());
+
       } else if (data.decideFunction === "Add a role") {
-        newEdit.addRole(); //done
-        initPromptUser();
+        //done
+
+        Promise.resolve(newEdit.addRole()).then(
+          initPromptUser());
+
+
 
       } else if (data.decideFunction === "Add an employee") {
-        newEdit.addEmployee();
+
+
+        Promise.resolve(newEdit.addEmployee()).then(
+          initPromptUser());
 
       } else if (data.decideFunction === "View employees by department") {
-        newResponse.viewByDepartment(); // figure out why landy isnt showing up
+
+
+        Promise.resolve(newResponse.viewByDepartment()).then(
+          initPromptUser());
       } else if (data.decideFunction === "View all employees by manager") {
-        newResponse.viewByManager(); // figure out why landy isnt showing up
+
+
+        Promise.resolve(newResponse.viewByManager()).then(
+          initPromptUser());
 
       } else if (data.decideFunction === "Remove employee") {
-        newRemove.removeEmployee();    //done
+
+
+        Promise.resolve(newRemove.removeEmployee()).then(
+          initPromptUser());
       } else if (data.decideFunction === "Update employee role") {
-        newEdit.updateEmployeeRole(); // done
+
+        Promise.resolve(newEdit.updateEmployeeRole()).then(
+          initPromptUser());
+
+
       } else if (data.decideFunction === "Update employee manager") {
-        newEdit.updateEmployeeManager();
+
+        Promise.resolve(newEdit.updateEmployeeManager()).then(
+          initPromptUser());
+
       } else if (data.decideFunction === "Remove role") {
-        newRemove.removeRole(); // fix where it deletes the player as well
+
+
+        Promise.resolve(newRemove.removeRole()).then(
+          initPromptUser());
 
       } else if (data.decideFunction === "Remove department") {
-        newRemove.removeDepartment();   //fix where it deletes the
+
+
+        Promise.resolve(newRemove.removeDepartment()).then(
+          initPromptUser());
 
       } else if (data.decideFunction === "View total utilized budget by department") {
-        newResponse.viewBudget();
+    
+
+        Promise.resolve(newResponse.viewBudget()).then(
+          initPromptUser());
+
       } else {
         console.log("Goodbye");
         return;
