@@ -3,6 +3,10 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 
+const server = require('../server')
+const mainMenue = new server;
+
+
 // creating the constructor function so that the prototypes can be used in server.js
 function EditDb() { }
 
@@ -100,6 +104,9 @@ EditDb.prototype.addRole = function () {
 
             db.query(updateString, (err, result) => {
                 console.log(`Added ${newRole} to the database`);
+
+                mainMenue.displayMenue()
+
             })
         });
 }
