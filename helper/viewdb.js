@@ -1,11 +1,8 @@
-
-// // requiring mysql2 and inquirer
+// requiring mysql2 and console.table
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
-const server = require('../server')
-
-// creating the constructor function se that the prototypes can be used in server.js
+// creating the constructor function so that the prototypes can be used in server.js
 function ViewDb() { }
 
 // connects to database

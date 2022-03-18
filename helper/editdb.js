@@ -3,7 +3,7 @@
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 
-// creating the constructor function se that the prototypes can be used in server.js
+// creating the constructor function so that the prototypes can be used in server.js
 function EditDb() { }
 
 // creates the arrays that will be populated with the information recieved from the database

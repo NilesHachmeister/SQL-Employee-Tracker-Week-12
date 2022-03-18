@@ -1,16 +1,17 @@
-const fs = require('fs')
-
+// requiring mysql2 and inquirer
 const mysql = require('mysql2');
-const cTable = require('console.table');
 const inquirer = require('inquirer');
 
-
+// creating the constructor function se that the prototypes can be used in server.js
 function RemoveDb() { }
+
+// creates the arrays that will be populated with the information recieved from the database
 let departmentArr = []
 let roleArr = []
 let employeeArr = []
 
 
+// connects to database
 const db = mysql.createConnection(
     {
         host: 'localhost',
@@ -20,33 +21,31 @@ const db = mysql.createConnection(
     },
 );
 
-
-
-
-db.query('SELECT department_name FROM departments', function (err, results) {
+// populates the departmentArr with all of the departments in the database
+db.query('SELECT * FROM departments', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const departmentName = results[index].department_name;
+        const departmentName = { name: results[index].department_name, value: results[index].id };
         departmentArr.push(departmentName)
     }
 });
 
-db.query('SELECT role_title FROM roles', function (err, results) {
+// populates the rolesArr with all of the roles the database
+db.query('SELECT * FROM roles', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const roleName = results[index].role_title;
+        const roleName = { name: results[index].role_title, value: results[index].id };
         roleArr.push(roleName)
     }
 });
 
-db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name FROM employees', function (err, results) {
+// populates the employeeArr and managerArr with all of the roles the database
+db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name , id FROM employees', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const employeeName = results[index].employee_name;
+        const employeeName = { name: results[index].employee_name, value: results[index].id };
         employeeArr.push(employeeName)
     }
 });
 
-
-
-
+// this prototype removes departments from the database
 RemoveDb.prototype.removeDepartment = function () {
     inquirer
         .prompt([
@@ -59,14 +58,13 @@ RemoveDb.prototype.removeDepartment = function () {
         ])
         .then((data) => {
             const selectedDepartment = data.department
-            db.query(`DELETE FROM departments WHERE department_name = ?`, selectedDepartment, (err, result) => {
-                console.log(`${selectedDepartment} has been removed from the database`);
+            db.query(`DELETE FROM departments WHERE id = ?`, selectedDepartment, (err, result) => {
+                console.log(`department has been removed from the database`);
             })
         });
 }
 
-
-
+// this prototype removes a role from the database
 RemoveDb.prototype.removeRole = function () {
     inquirer
         .prompt([
@@ -79,12 +77,13 @@ RemoveDb.prototype.removeRole = function () {
         ])
         .then((data) => {
             const selectedRole = data.role
-            db.query(`DELETE FROM roles WHERE role_title = ?`, selectedRole, (err, result) => {
-                console.log(`${selectedRole} has been removed from the database`);
+            db.query(`DELETE FROM roles WHERE id = ?`, selectedRole, (err, result) => {
+                console.log(`role has been removed from the database`);
             })
         });
 }
 
+// this prototype removes an employee from the database
 RemoveDb.prototype.removeEmployee = function () {
     inquirer
         .prompt([
@@ -97,12 +96,11 @@ RemoveDb.prototype.removeEmployee = function () {
         ])
         .then((data) => {
             const selectedEmployee = data.employee
-            db.query(`DELETE FROM employees WHERE CONCAT(employee_first_name, " ", employee_last_name) = ?`, selectedEmployee, (err, result) => {
-                console.log(`${selectedEmployee} has been removed from the database`);
+            db.query(`DELETE FROM employees WHERE id = ?`, selectedEmployee, (err, result) => {
+                console.log(`employee has been removed from the database`);
             })
         });
 }
 
-
-
+// exports the prototypes
 module.exports = RemoveDb;
