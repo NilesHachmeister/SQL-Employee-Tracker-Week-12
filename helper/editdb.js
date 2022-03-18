@@ -16,24 +16,18 @@ let managerArr = []
 const db = mysql.createConnection(
     {
         host: 'localhost',
-        // MySQL username,
         user: 'root',
-        // MySQL password created with a random password genorator
         password: 'S$U%Ry2AT%9To8A29hro6h4cWr',
-
-
-        //   may change database name
         database: 'hr_db'
     },
-    console.log(`Connected to the courses_db database.`)
 );
 
 
 
 
-db.query('SELECT department_name FROM departments', function (err, results) {
+db.query('SELECT * FROM departments', function (err, results) {
     for (let index = 0; index < results.length; index++) {
-        const departmentName = results[index].department_name;
+        const departmentName = { name: results[index].department_name, value: results[index].id };
         departmentArr.push(departmentName)
     }
 });
@@ -43,7 +37,6 @@ db.query('SELECT * FROM roles', function (err, results) {
         const roleName = { name: results[index].role_title, value: results[index].id };
         roleArr.push(roleName)
     }
-    console.log("roleArr", roleArr)
 });
 
 
@@ -54,7 +47,6 @@ db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_l
         managerArr.push(employeeName)
     }
     managerArr.push({ name: "None", value: null });
-    console.log(managerArr)
 });
 
 
@@ -106,19 +98,16 @@ EditDb.prototype.addRole = function () {
             const newRole = data.role
             const newSalary = data.salary
             const selectedDepartment = data.department
-            let selectedDepartmentId;
 
-            db.promise().query('SELECT id FROM departments WHERE department_name = ?', selectedDepartment, function (err, results) {
-                selectedDepartmentId = results[0].id
-            }).then((selectedDepartmentId) => {
 
-                const departmentId = selectedDepartmentId[0][0].id
 
-                let updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${departmentId});`
-                db.query(updateString, (err, result) => {
+            const updateString = `INSERT INTO roles (role_title, role_salary, department_id) VALUES ("${newRole}", ${newSalary}, ${selectedDepartment});`
 
-                })
-            });
+            db.query(updateString, (err, result) => {
+
+                return
+            })
+
             console.log(`Added ${newRole} to the database`);
         });
 }
@@ -155,25 +144,18 @@ EditDb.prototype.addEmployee = function () {
         ])
         .then((data) => {
 
-            console.log("insert ", data);
             const firstName = data.first;
             const lastName = data.last;
             const selectedRole = data.role;
             const selectedManager = data.manager;
 
-            let roleid;
 
             const addEmployee = `INSERT INTO employees (employee_first_name, employee_last_name, employee_role_id, manager_id) VALUES ("${firstName}", "${lastName}", ${selectedRole}, ${selectedManager})`
 
             db.query(addEmployee, (err, result) => {
-                console.log("Added employeee to db.")
+                console.log(`Added ${firstName} ${lastName} to the database`)
             })
-
-
-
         });
-
-
 };
 
 
@@ -198,22 +180,12 @@ EditDb.prototype.updateEmployeeRole = function () {
 
             const employee = data.employee;
             const role = data.role;
-            let roleIdNumber = 0;
 
-            db.promise().query('SELECT id FROM roles WHERE roles.role_title = ?', role, function (err, results) {
+            const updateStirng = `UPDATE employees SET employee_role_id = ${role} WHERE id = "${employee}";`
 
-                roleIdNumber = results[0].id;
-
-            }).then((roleIdNumber) => {
-
-                let roleId = roleIdNumber[0][0].id
-
-                const updateStirng = `UPDATE employees SET employee_role_id = ${roleId} WHERE CONCAT(employees.employee_first_name, " ", employees.employee_last_name) = "${employee}";`
-
-                db.query(updateStirng, (err, result) => {
-                    console.log(`${employee} now has the role of ${role}`);
-                })
-            });
+            db.query(updateStirng, (err, result) => {
+                console.log(`Role has been updated`);
+            })
         });
 }
 
