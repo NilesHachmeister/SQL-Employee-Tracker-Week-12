@@ -1,20 +1,11 @@
 
-// requiring mysql2 and inquirer
+// requiring displayMenue from the server, mysql2 and inquirer
+const server = require('../server')
 const mysql = require('mysql2');
 const inquirer = require('inquirer');
 
-const server = require('../server')
-const mainMenue = new server;
-
-
 // creating the constructor function so that the prototypes can be used in server.js
 function EditDb() { }
-
-// creates the arrays that will be populated with the information recieved from the database
-let departmentArr = []
-let roleArr = []
-let employeeArr = []
-let managerArr = []
 
 // connects to database
 const db = mysql.createConnection(
@@ -25,33 +16,6 @@ const db = mysql.createConnection(
         database: 'hr_db'
     },
 );
-
-// populates the departmentArr with all of the departments in the database
-db.query('SELECT * FROM departments', function (err, results) {
-    for (let index = 0; index < results.length; index++) {
-        const departmentName = { name: results[index].department_name, value: results[index].id };
-        departmentArr.push(departmentName)
-    }
-});
-
-// populates the rolesArr with all of the roles the database
-db.query('SELECT * FROM roles', function (err, results) {
-    for (let index = 0; index < results.length; index++) {
-        const roleName = { name: results[index].role_title, value: results[index].id };
-        roleArr.push(roleName)
-    }
-});
-
-// populates the employeeArr and managerArr with all of the roles the database
-db.query('SELECT CONCAT(employees.employee_first_name, " ", employees.employee_last_name) AS employee_name , id FROM employees', function (err, results) {
-    for (let index = 0; index < results.length; index++) {
-        const employeeName = { name: results[index].employee_name, value: results[index].id };
-        employeeArr.push(employeeName)
-        managerArr.push(employeeName)
-    }
-    managerArr.push({ name: "None", value: null });
-});
-
 
 // this prototype is used to add a department
 EditDb.prototype.addDepartment = function () {
@@ -69,12 +33,13 @@ EditDb.prototype.addDepartment = function () {
             db.query(`INSERT INTO departments (department_name)
             VALUES (?)`, newDepartment, (err, result) => {
                 console.log(`Added ${newDepartment} to the database`);
+                displayMenue()
             })
         });
 }
 
 // this prototype is used to add a role
-EditDb.prototype.addRole = function () {
+EditDb.prototype.addRole = function (departmentArr) {
     inquirer
         .prompt([
             {
@@ -104,15 +69,15 @@ EditDb.prototype.addRole = function () {
 
             db.query(updateString, (err, result) => {
                 console.log(`Added ${newRole} to the database`);
-
-                mainMenue.displayMenue()
-
+                displayMenue()
             })
         });
 }
 
+
+
 //this prototype is used to add an employee 
-EditDb.prototype.addEmployee = function () {
+EditDb.prototype.addEmployee = function (roleArr, managerArr) {
     inquirer
         .prompt([
             {
@@ -150,12 +115,13 @@ EditDb.prototype.addEmployee = function () {
 
             db.query(addEmployee, (err, result) => {
                 console.log(`Added ${firstName} ${lastName} to the database`)
+                displayMenue()
             })
         });
 };
 
 // this prototype is used to update an employees role
-EditDb.prototype.updateEmployeeRole = function () {
+EditDb.prototype.updateEmployeeRole = function (employeeArr, roleArr) {
     inquirer
         .prompt([
             {
@@ -180,12 +146,13 @@ EditDb.prototype.updateEmployeeRole = function () {
 
             db.query(updateStirng, (err, result) => {
                 console.log(`Role has been updated`);
+                displayMenue()
             })
         });
 }
 
 // this prototype is used to update an employees manager
-EditDb.prototype.updateEmployeeManager = function () {
+EditDb.prototype.updateEmployeeManager = function (employeeArr, managerArr) {
     inquirer
         .prompt([
             {
@@ -209,6 +176,7 @@ EditDb.prototype.updateEmployeeManager = function () {
 
             db.query(updateStirng, (err, result) => {
                 console.log(`Manager has been updated`);
+                displayMenue()
             })
         });
 }

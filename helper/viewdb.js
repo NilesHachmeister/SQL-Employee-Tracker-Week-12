@@ -20,6 +20,7 @@ const db = mysql.createConnection(
 ViewDb.prototype.viewDepartments = function () {
   db.query('SELECT * FROM departments', function (err, results) {
     console.table(results)
+    displayMenue()
   });
 }
 
@@ -27,6 +28,7 @@ ViewDb.prototype.viewDepartments = function () {
 ViewDb.prototype.viewRoles = function () {
   db.query('SELECT roles.id, roles.role_title `Title`, roles.role_salary `Salary`, departments.department_name `Department` FROM roles LEFT JOIN departments ON roles.department_id = departments.id ', function (err, results) {
     console.table(results);
+    displayMenue()
   });
 }
 
@@ -34,6 +36,7 @@ ViewDb.prototype.viewRoles = function () {
 ViewDb.prototype.viewEmployees = function () {
   db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, CONCAT(m.employee_first_name, " ", m.employee_last_name) `manager` FROM employees e LEFT JOIN employees m ON e.manager_id = m.id LEFT JOIN roles r ON e.employee_role_id = r.id LEFT JOIN departments d ON r.department_id = d.id', function (err, results) {
     console.table(results);
+    displayMenue()
   });
 }
 
@@ -41,6 +44,7 @@ ViewDb.prototype.viewEmployees = function () {
 ViewDb.prototype.viewByDepartment = function () {
   db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, m.employee_first_name `manager` FROM employees e LEFT JOIN employees m ON e.manager_id = m.id LEFT JOIN roles r ON e.employee_role_id = r.id LEFT JOIN departments d ON r.department_id = d.id ORDER BY d.department_name DESC', function (err, results) {
     console.table(results);
+    displayMenue()
   });
 }
 
@@ -48,6 +52,7 @@ ViewDb.prototype.viewByDepartment = function () {
 ViewDb.prototype.viewByManager = function () {
   db.query('SELECT e.id, e.employee_first_name `First Name`, e.employee_last_name `Last Name`, r.role_title `Title`, d.department_name `Department`, r.role_salary `Salary`, m.employee_first_name `manager` FROM employees e LEFT JOIN employees m ON e.manager_id = m.id LEFT JOIN roles r ON e.employee_role_id = r.id LEFT JOIN departments d ON r.department_id = d.id ORDER BY m.employee_first_name DESC', function (err, results) {
     console.table(results);
+    displayMenue()
   });
 }
 
@@ -56,6 +61,7 @@ ViewDb.prototype.viewBudget = function () {
 
   db.query('SELECT d.department_name, SUM(r.role_salary) AS `Budget by department` FROM employees e LEFT JOIN employees m ON e.manager_id = m.id LEFT JOIN roles r ON e.employee_role_id = r.id LEFT JOIN departments d ON r.department_id = d.id GROUP BY department_id', function (err, results) {
     console.table(results);
+    displayMenue()
   });
 }
 
